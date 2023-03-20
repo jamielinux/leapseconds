@@ -23,6 +23,7 @@ tag:
   git add .changelog.d CHANGELOG.md src/*/__init__.py
   git commit -q -m v$version
   git tag -a v$version -m "Release $version"
+  git show
 
 # GitHub Release
 release:
