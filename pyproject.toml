@@ -10,13 +10,14 @@ name = "leapseconds"
 description = "Data for official leap seconds, provided as a tuple of Unix timestamps"
 readme = "README.md"
 requires-python = ">=3.7"
-license = { file = "LICENSE" }
+license = "MIT"
 keywords = ["iers", "leap", "seconds"]
 authors = [
   { name = "Jamie Nguyen", email = "j@jamielinux.com" },
 ]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
+  "License :: OSI Approved :: MIT License",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3.7",
   "Programming Language :: Python :: 3.8",
