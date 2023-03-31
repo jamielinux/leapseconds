@@ -74,7 +74,12 @@ jobs:
       - name: 'Harden Runner'
         uses: step-security/harden-runner@1f99358870fe1c846a3ccba386cc2b2246836776 # v2.2.1
         with:
-          egress-policy: audit
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            pypi.org:443
+            pypi.python.org:443
+            upload.pypi.org:443
 
       - name: 'Download dist'
         uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3.0.2
