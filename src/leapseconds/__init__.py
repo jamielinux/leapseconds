@@ -4,3 +4,5 @@
 """Data for official leap seconds, provided as a tuple of Unix timestamps."""
 
 from .leapseconds import LEAP_SECONDS
+
+__all__ = ["LEAP_SECONDS"]
