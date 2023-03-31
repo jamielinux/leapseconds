@@ -37,7 +37,6 @@ jobs:
         with:
           disable-sudo: true
           egress-policy: block
-          disable-telemetry: true
           allowed-endpoints: >
             files.pythonhosted.org:443
             github.com:443
