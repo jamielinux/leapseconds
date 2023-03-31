@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: Copyright © 2023 Jamie Nguyen <j@jamielinux.com>
 # SPDX-License-Identifier: MIT
+# pyright: strict
 
 """Data for official leap seconds, provided as a tuple of Unix timestamps."""
 
