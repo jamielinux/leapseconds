@@ -16,6 +16,8 @@ concurrency:
 
 env:
   PIP_DISABLE_PIP_VERSION_CHECK: 1
+  PYTHONUNBUFFERED: 1
+  FORCE_COLOR: 1
 
 
 jobs:
@@ -28,9 +30,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
-        python-version: ['3.11']
         os: [ubuntu-latest]
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11', 'pypy3.7', 'pypy3.8', 'pypy3.9']
+        include:
+          - os: windows-latest
+            python-version: '3.7'
 
     steps:
 
@@ -47,16 +51,21 @@ jobs:
           python -m pip install --upgrade hatch
 
       - name: 'Run tests'
-        run: |
-          hatch run +py=${{ matrix.python-version }} ci:cov 'coverage.${{ matrix.os }}.${{ matrix.python-version }}.xml'
+        run: >
+          hatch run +py=${{ matrix.python-version }} ci:cov
+          --data-file '.coverage.${{ matrix.os }}.${{ matrix.python-version }}'
 
-      - name: 'Upload coverage data'
+      - name: 'Upload coverage'
         uses: actions/upload-artifact@v3
         with:
-          name: covdata
-          path: .coverage.*
+          name: coverage
+          path: '.coverage.*'
+          if-no-files-found: error
+          retention-days: 30
+
 
   coverage:
+    if: github.repository == 'jamielinux/leapseconds' && github.ref == 'refs/heads/main'
     name: 'Generate code coverage badge'
     timeout-minutes: 30
     runs-on: ubuntu-latest
@@ -76,21 +85,21 @@ jobs:
         run: |
           python -m pip install --upgrade hatch
 
-      - name: 'Download coverage data'
+      - name: 'Download coverage'
         uses: actions/download-artifact@v3
         with:
-          name: covdata
+          name: coverage
 
-      - name: 'Combine coverage data'
+      - name: 'Combine coverage'
         run: |
-          hatch run +py=3.11 ci:cov
-          export TOTAL=$(python -c "import json;print(json.load(open('coverage.json'))['totals']['percent_covered_display'])")
+          hatch run +py=3.11 ci:cov-combine
+          export TOTAL=$(python -c \
+              "import json;print(json.load(open('coverage.json'))['totals']['percent_covered_display'])")
           echo "total=$TOTAL" >> $GITHUB_ENV
           echo "### Total coverage: ${TOTAL}%" >> $GITHUB_STEP_SUMMARY
 
-      - name: 'Make coverage badge'
-        if: (github.repository == 'jamielinux/leapseconds') && (github.ref == 'refs/heads/main')
-        uses: schneegans/dynamic-badges-action@v1.6.0
+      - name: 'Coverage badge'
+        uses: schneegans/dynamic-badges-action@5d424ad4060f866e4d1dab8f8da0456e6b1c4f56  # v1.6.0
         with:
           auth: ${{ secrets.GIST_TOKEN }}
           gistID: 7c0026bdbd4a00863dcd6878e5e3b943
