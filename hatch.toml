@@ -1,5 +1,5 @@
 [version]
-path = "src/leapseconds/__init__.py"
+path = "src/leapseconds/__about__.py"
 
 # Local tests
 [envs.default]
