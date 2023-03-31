@@ -37,81 +37,6 @@ Homepage = "https://github.com/jamielinux/leapseconds"
 Issues = "https://github.com/jamielinux/leapseconds/issues"
 Source = "https://github.com/jamielinux/leapseconds"
 
-[tool.hatch.version]
-path = "src/leapseconds/__init__.py"
-
-# Local tests
-[tool.hatch.envs.default]
-python = "3.11"
-dependencies = [
-  "black ~= 23.1.0",
-  "coverage ~= 7.2.2",
-  "hatch-containers ~= 0.7.0",
-  "pre-commit ~= 3.1.1",
-  "pylint ~= 2.17.0",
-  "pyright ~= 1.1.299",
-  "pytest ~= 7.2.2",
-  "ruff ~= 0.0.257",
-  "scriv ~= 1.2.1",
-  "ssort ~= 0.11.6",
-]
-[tool.hatch.envs.default.scripts]
-cov = ["coverage run -p", "coverage combine -q", "coverage report -m"]
-check = [
-  "ruff check .",
-  "pylint src",
-  "black --quiet --check --diff .",
-  "pyright",
-  "ssort --check --diff .",
-]
-
-# Local tests in containers with cpython
-[tool.hatch.envs.test]
-type = "container"
-platforms = ["linux"]
-dependencies = [
-  "coverage ~= 7.2.2",
-  "pytest ~= 7.2.2",
-]
-image = "python:{version}"
-[tool.hatch.envs.test.scripts]
-cov = ["coverage run -p", "coverage combine -q", "coverage report -m"]
-[[tool.hatch.envs.test.matrix]]
-python = ["3.7", "3.8", "3.9", "3.10", "3.11"]
-
-# Local tests in containers with pypy
-[tool.hatch.envs.testpypy]
-type = "container"
-platforms = ["linux"]
-dependencies = [
-  "coverage ~= 7.2.2",
-  "pytest ~= 7.2.2",
-]
-image = "pypy:{version}"
-[tool.hatch.envs.testpypy.scripts]
-cov = ["coverage run -p", "coverage combine -q", "coverage report -m"]
-[[tool.hatch.envs.testpypy.matrix]]
-python = ["3.7", "3.8", "3.9"]
-
-# GitHub Workflow: CI
-[tool.hatch.envs.ci]
-platforms = ["linux", "macos", "windows"]
-dependencies = [
-  "coverage ~= 7.2.2",
-  "pytest ~= 7.2.2",
-]
-[tool.hatch.envs.ci.scripts]
-cov = ["coverage run -p", "coverage combine -q --keep", "coverage report -m", "coverage json -q"]
-[[tool.hatch.envs.ci.matrix]]
-python = ["3.7", "3.8", "3.9", "3.10", "3.11", "pypy3.7", "pypy3.8", "pypy3.9"]
-
-# GitHub Workflow: Publish
-[tool.hatch.envs.publish]
-platforms = ["linux"]
-dependencies = []
-[[tool.hatch.envs.publish.matrix]]
-python = ["3.11"]
-
 # pytest & coverage
 [tool.pytest.ini_options]
 addopts = [
@@ -119,7 +44,6 @@ addopts = [
 ]
 [tool.coverage.run]
 branch = true
-parallel = true
 command_line = "-m pytest"
 omit = [
   "tests/*"
@@ -138,12 +62,13 @@ source = [
   'D:\a\leapseconds\leapseconds',
 ]
 
-# other tools
+# scriv
 [tool.scriv]
 fragment_directory = ".changelog.d"
 format = "md"
 version = "literal: src/leapseconds/__init__.py: __version__"
 
+# checkers, formatters & linters
 [tool.ruff]
 target-version = "py37"
 line-length = 88
@@ -155,7 +80,8 @@ select = [
 ]
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["F401"]
-"test*" = ["D", "INP001", "S"]
+"tests/conftest.py" = ["PT004"]
+"tests/*" = ["D", "E501", "FBT", "INP001", "RUF001", "RUF002", "RUF003", "S"]
 [tool.ruff.mccabe]
 max-complexity = 10
 
