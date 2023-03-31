@@ -30,12 +30,6 @@ dependencies = [
   "coverage ~= 7.2",
   "pytest ~= 7.2",
 ]
-[envs.base_containers]
-template = "base"
-type = "container"
-platforms = ["linux"]
-[envs.base_containers.scripts]
-cov = ["coverage run {args}", "coverage report -m"]
 
 # GitHub Workflow: CI
 [envs.ci]
