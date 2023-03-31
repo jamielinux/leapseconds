@@ -73,12 +73,12 @@ jobs:
           retention-days: 30
 
 
-  coverage:
+  covbadge:
     if: github.repository == 'jamielinux/leapseconds' && github.ref == 'refs/heads/main'
-    name: 'Generate code coverage badge'
+    name: 'Code coverage badge'
     timeout-minutes: 20
     runs-on: ubuntu-latest
-    needs: test
+    needs: [test]
 
     steps:
 
