@@ -1,4 +1,11 @@
 
+<a id='changelog-v2023.3.2'></a>
+# v2023.3.2 — 2023-03-31
+
+## Added
+
+- Add py.typed
+
 <a id='changelog-v2023.3.1'></a>
 # v2023.3.1 — 2023-03-31
 
