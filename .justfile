@@ -4,6 +4,10 @@ help:
 
 current_version := `hatch version`
 
+# Create changelog entry
+changelog:
+  scriv create --edit
+
 # Tag and changelog
 tag:
   #!/usr/bin/env bash
