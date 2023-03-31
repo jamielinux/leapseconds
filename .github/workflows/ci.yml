@@ -19,12 +19,15 @@ env:
   PYTHONUNBUFFERED: 1
   FORCE_COLOR: 1
 
+permissions:
+  contents: read
+
 
 jobs:
 
   test:
     name: 'Test with python ${{ matrix.python-version }} on ${{ matrix.os }}'
-    timeout-minutes: 30
+    timeout-minutes: 20
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -38,11 +41,22 @@ jobs:
 
     steps:
 
+      - name: 'Harden Runner'
+        uses: step-security/harden-runner@1f99358870fe1c846a3ccba386cc2b2246836776 # v2.2.1
+        with:
+          disable-sudo: true
+          egress-policy: block
+          disable-telemetry: true
+          allowed-endpoints: >
+            files.pythonhosted.org:443
+            github.com:443
+            pypi.org:443
+
       - name: 'Checkout'
-        uses: actions/checkout@v3
+        uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
 
       - name: 'Install python'
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@d27e3f3d7c64b4bbf8e4abfb9b63b83e846e0435 # v4.5.0
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -56,7 +70,7 @@ jobs:
           --data-file '.coverage.${{ matrix.os }}.${{ matrix.python-version }}'
 
       - name: 'Upload coverage'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         with:
           name: coverage
           path: '.coverage.*'
@@ -67,17 +81,29 @@ jobs:
   coverage:
     if: github.repository == 'jamielinux/leapseconds' && github.ref == 'refs/heads/main'
     name: 'Generate code coverage badge'
-    timeout-minutes: 30
+    timeout-minutes: 20
     runs-on: ubuntu-latest
     needs: test
 
     steps:
 
+      - name: 'Harden Runner'
+        uses: step-security/harden-runner@1f99358870fe1c846a3ccba386cc2b2246836776 # v2.2.1
+        with:
+          disable-sudo: true
+          egress-policy: block
+          disable-telemetry: true
+          allowed-endpoints: >
+            api.github.com:443
+            files.pythonhosted.org:443
+            github.com:443
+            pypi.org:443
+
       - name: 'Checkout'
-        uses: actions/checkout@v3
+        uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
 
       - name: 'Install python'
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@d27e3f3d7c64b4bbf8e4abfb9b63b83e846e0435 # v4.5.0
         with:
           python-version: '3.11'
 
@@ -86,7 +112,7 @@ jobs:
           python -m pip install --upgrade hatch
 
       - name: 'Download coverage'
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3.0.2
         with:
           name: coverage
 
@@ -99,7 +125,7 @@ jobs:
           echo "### Total coverage: ${TOTAL}%" >> $GITHUB_STEP_SUMMARY
 
       - name: 'Coverage badge'
-        uses: schneegans/dynamic-badges-action@5d424ad4060f866e4d1dab8f8da0456e6b1c4f56  # v1.6.0
+        uses: schneegans/dynamic-badges-action@5d424ad4060f866e4d1dab8f8da0456e6b1c4f56 # v1.6.0
         with:
           auth: ${{ secrets.GIST_TOKEN }}
           gistID: 7c0026bdbd4a00863dcd6878e5e3b943
