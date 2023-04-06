@@ -6,7 +6,9 @@ on:
       - 'main'
     paths-ignore:
       - '.changelog.d/**'
+      - '.github/workflows/*'
       - 'CHANGELOG.*'
+      - 'README.*'
       - 'src/*/__about__.py'
   workflow_dispatch:
 
