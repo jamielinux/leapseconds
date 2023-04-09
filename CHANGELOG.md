@@ -1,4 +1,11 @@
 
+<a id='changelog-v2023.4.0'></a>
+# v2023.4.0 — 2023-04-09
+
+## Removed
+
+- Removed unneeded directories from the source distribution.
+
 <a id='changelog-v2023.3.3'></a>
 # v2023.3.3 — 2023-03-31
 

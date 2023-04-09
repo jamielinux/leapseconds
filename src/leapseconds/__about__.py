@@ -3,4 +3,4 @@
 
 """Project version."""
 
-__version__ = "2023.3.3"
+__version__ = "2023.4.0"
